@@ -5,7 +5,7 @@ sudo rm -f /dev/calculator_result
 sudo rmmod calculator
 
 make 
-echo "\n"
+echo ""
 sudo insmod ./calculator.ko
 
 sudo mknod /dev/calculator_first c 300 0

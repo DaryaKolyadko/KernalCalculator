@@ -67,7 +67,7 @@ int init_module(void)
 
     major_number = register_chrdev(MAJOR_NUMBER, module_name, &fops);
     if (major_number < 0) {
-        printk("Character device registration failed [MAJOR_NUMBER = %d]\n", major_number);
+        printk("Character device registration failed [error number = %d]\n", major_number);
         return major_number;
     }
 
@@ -106,13 +106,13 @@ static ssize_t dev_read(struct file* file_, char* buffer, size_t length, loff_t*
     switch(minor_num)
     { 
         case 0: // first
-            snprintf(message, sizeof(message), "first =  %ld.\n", first);
+            snprintf(message, sizeof(message), "first =  %ld\n", first);
             break;
         case 1: // second
-            snprintf(message, sizeof(message), "second =  %ld.\n", second);
+            snprintf(message, sizeof(message), "second =  %ld\n", second);
             break;
         case 2: // operation
-            snprintf(message, sizeof(message), "operation =  %c.\n", operation);
+            snprintf(message, sizeof(message), "operation =  %c\n", operation);
             break;
         case 3: // result
             error_code = calculate();
@@ -140,6 +140,9 @@ static ssize_t dev_read(struct file* file_, char* buffer, size_t length, loff_t*
     if (message[*off] == '\0') {
         return 0;
     }
+    /* Besides copying the string to the user provided buffer,
+       this function also checks that the user has permission to
+       write to the buffer, that it is mapped */
     copy_to_user(buffer, &message[*off], 1);
     *off += 1;
     return 1;
